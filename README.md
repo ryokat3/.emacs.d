@@ -38,8 +38,6 @@ and not to open the personal data in GitHub.
 References
 ----------
 
-+ http://wp.yat-net.com/?p=3874
-  A tutorial for GitHub beginners (Japanese)
-
-+ http://tokkono.cute.coocan.jp/blog/slow/index.php/programming/markdown-skills-for-github-beginners/
-  A tutorial for GitHub README.md and Wiki (Japanese) 
++ [A tutorial for GitHub beginners (Japanese)](http://wp.yat-net.com/?p=3874)
++ [A tutorial for GitHub README.md and Wiki (Japanese)](http://tokkono.cute.coocan.jp/blog/slow/index.php/programming/markdown-skills-for-github-beginners/)
+  
