@@ -33,3 +33,10 @@ data, e.g. e-mail address, password, host-specific exec-path etc.
 
 It is beneficial to keep elisp clean from such data, to make it generic,
 and not to open the personal data in GitHub.
+
+
+References
+----------
+
+[GIT for Beginners (Japanese)]: http://wp.yat-net.com/?p=3874
+[GIT Markdown (Japanese)]: http://tokkono.cute.coocan.jp/blog/slow/index.php/programming/markdown-skills-for-github-beginners/
