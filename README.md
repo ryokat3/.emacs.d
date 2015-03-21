@@ -3,7 +3,7 @@
 .emacs.d
 ========
 
-The .emacs.d directory in github.
+The .emacs.d directory
 
 
 
@@ -19,12 +19,14 @@ Usage
 
    .emacs.d directory will be created.
 
+
 2. (OPTIONAL) Create the registry file (~/.registry.xml) for your
    customization.
 
    Currently init.el supports those parameters below.
 
-   + `emacs.exec-path` :: added to `exec-path` list
+   + `emacs.exec-path` :: add paths to `exec-path` list
+
 
 
 Registry File
@@ -61,9 +63,10 @@ The top level tag will be ignored to create the symbol name.
 
 The default registry file is "~/.registry.xml".
 
-The advantage to use XML instead of elisp to set variables is that
+The advantage to use XML instead of elisp for setting variables is that
 other applications (e.g. xmllint) can parse the XML and extract the
 value. For example,
+
 
 ```
 xmllint -xpath "//my-email/text()" ~/.registry.xml
@@ -81,6 +84,7 @@ Parameters
 References
 ----------
 
+- [Project Page](https://github.com/wak109/.emacs.d)
 - [Mastering Markdown](https://guides.github.com/features/mastering-markdown/)
 - [GitHub Flavored Markdown](https://help.github.com/articles/github-flavored-markdown/)
 - [GitHubを使ってみよう！導入と簡単な流れ、よく使うコマンドなど。](http://wp.yat-net.com/?p=3874)
