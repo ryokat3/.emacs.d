@@ -12,10 +12,19 @@ Usage
 
 1. Clone https://github.com/wak109/.emacs.d.git to your home directory.
 
-      git clone https://github.com/wak109/.emacs.d.git
 
-  .emacs.d directory will be created.
+   ```
+   git clone https://github.com/wak109/.emacs.d.git
+   ```
 
+   .emacs.d directory will be created.
+
+2. (OPTIONAL) Create the registry file (~/.registry.xml) for your
+   customization.
+
+   Currently init.el supports those parameters below.
+
+   + `emacs.exec-path` :: added to `exec-path` list
 
 
 Registry File
