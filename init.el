@@ -19,11 +19,13 @@
 ;;;
 ;;; Registry File alist
 ;;;
+;;;  ( hostname . registry-file )
+;;;
+(defconst my-default-registry-file "~/.registry.xml")
 (setq my-registry-alist
       '(
 	("JP00086284" . "~/Documents/etc/mydata.xml")
 	("DELL-PC" . "~/.mydata.xml")
-	("SURFACEPRO3" . "~/.mydata.xml")
 	))
 
 ;;;
@@ -110,6 +112,7 @@
 ;;;
 ;;; Registry
 ;;;
+(require 'xml)
 (defun my-registry-add-value (current-value value)
   (cond
    ((null current-value) value)
@@ -146,11 +149,14 @@
    (t nil)))
 
 (let ((registry-file-name
-       (cdr
-	(assoc (system-name) my-registry-alist))))
-  (if (file-exists-p registry-file-name)
-      (my-registry-parser (xml-parse-file registry-file-name))))
-
+       (or (cdr
+	    (assoc (system-name) my-registry-alist))
+	   my-default-registry-file)))
+  (if (file-exists-p registry-file-name)    
+;      (my-registry-parser (xml-parse-file registry-file-name))))
+      (mapcar (lambda (node) (if (listp node) (my-registry-parser node)))
+	      (xml-node-children
+	       (car (xml-parse-file "~/.registry.xml"))))))
 
 ;;;
 ;;; Window Size
@@ -168,12 +174,12 @@
 ;;; exec-path
 ;;;
 (cond
- ((not (boundp 'mydata.emacs.exec-path)) nil)
- ((listp mydata.emacs.exec-path)
+ ((not (boundp 'emacs.exec-path)) nil)
+ ((listp emacs.exec-path)
   (mapcar (lambda (path) (setq exec-path (cons path exec-path)))
-	  mydata.emacs.exec-path))
- ((stringp mydata.emacs.exec-path)
-  (setq exec-path (cons mydata.emacs.exec-path exec-path))))
+	  emacs.exec-path))
+ ((stringp emacs.exec-path)
+  (setq exec-path (cons emacs.exec-path exec-path))))
 
 
 ;;;
