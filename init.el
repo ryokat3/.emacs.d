@@ -12,9 +12,19 @@
 ;;; ~/AppData/Roaming/.emacs.d/init.el
 ;;;
 ;;; (setenv "HOME" "C:/Users/XXXX")
-;;; (setq user-emacs-directory "~/Dropbox/myprojectroot/myemacs/.emacs.d")
+;;; (setq user-emacs-directory "~/Dropbox/.emacs.d")
 ;;; (load-file (expand-file-name "init.el" user-emacs-directory))
 ;;;
+
+;;;
+;;; Registry File alist
+;;;
+(setq my-registry-alist
+      '(
+	("JP00086284" . "~/Documents/etc/mydata.xml")
+	("DELL-PC" . "~/.mydata.xml")
+	("SURFACEPRO3" . "~/.mydata.xml")
+	))
 
 ;;;
 ;;; Basic Settings
@@ -137,12 +147,7 @@
 
 (let ((registry-file-name
        (cdr
-	(assoc (system-name)
-	       '(
-		 ("JP00086284" . "~/Documents/etc/mydata.xml")
-		 ("DELL-PC" . "~/.mydata.xml")
-		 ("SURFACEPRO3" . "~/.mydata.xml")
-		 )))))
+	(assoc (system-name) my-registry-alist))))
   (if (file-exists-p registry-file-name)
       (my-registry-parser (xml-parse-file registry-file-name))))
 
@@ -191,6 +196,15 @@
       '(
 	(org-mode . "org-template.org")
 	))
+;;;
+;;; melpa
+;;;
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
+(when (< emacs-major-version 24)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(package-initialize)
 
 ;;;
 ;;;
@@ -269,15 +283,6 @@
 ;;;
 (require 'my-openssl)
 
-;;;
-;;; melpa
-;;;
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-(package-initialize)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
