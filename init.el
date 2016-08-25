@@ -251,7 +251,8 @@
      :foreground "black"
      :box nil)
     ))
-(if window-system tabber-init)
+(if window-system
+    (tabber-init))
 
 ;;;
 ;;; Theme
