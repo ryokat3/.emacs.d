@@ -217,7 +217,7 @@
 ;;;
 ;;; Tabber.el
 ;;;
-(defun tabbar-init()
+(defun tabber-init()
   (progn
     (require 'tabbar)
     (tabbar-mode)
