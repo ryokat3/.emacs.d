@@ -215,9 +215,9 @@
 
 ;;;
 ;;;
-;;; Tabber.el
+;;; Tabbar.el
 ;;;
-(defun tabber-init()
+(defun tabbar-init()
   (progn
     (require 'tabbar)
     (tabbar-mode)
@@ -253,7 +253,7 @@
      :box nil)
     ))
 (if window-system
-    (tabber-init))
+    (tabbar-init))
 
 ;;;
 ;;; Theme
