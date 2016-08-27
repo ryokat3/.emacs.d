@@ -7,7 +7,7 @@
 ;;;
 ;;; README
 ;;;
-;;; Windows 7 ::
+;;; Windows 7 - 10 ::
 ;;;
 ;;; ~/AppData/Roaming/.emacs.d/init.el
 ;;;
@@ -26,7 +26,6 @@
       '(
 	("JP00086284" . "~/Documents/etc/registry.xml")
 	("SURFACEPRO3" . "~/Documents/etc/registry.xml")
-	("DELL-PC" . "~/.mydata.xml")
 	))
 
 ;;;
@@ -213,65 +212,12 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
 
-;;;
-;;;
-;;; Tabbar.el
-;;;
-(defun tabbar-init()
-  (progn
-    (require 'tabbar)
-    (tabbar-mode)
-    (global-set-key "\M-]" 'tabbar-forward)  ; 次のタブ
-    (global-set-key "\M-[" 'tabbar-backward) ; 前のタブ
-    ;; タブ上でマウスホイールを使わない
-    (tabbar-mwheel-mode nil)
-    ;; グループを使わない
-    (setq tabbar-buffer-groups-function nil)
-    ;; 左側のボタンを消す
-    (dolist (btn '(tabbar-buffer-home-button
-		   tabbar-scroll-left-button
-		   tabbar-scroll-right-button))
-      (set btn (cons (cons "" nil)
-		     (cons "" nil))))
-    ;; 色設定
-    ;;
-    (set-face-attribute ; バー自体の色
-     'tabbar-default nil
-     :background "white"
-     :family "Inconsolata"
-     :height 0.75)  ; same font size with buffer if height is 1.0
-    (set-face-attribute ; アクティブなタブ
-     'tabbar-selected nil
-     :background "black"
-     :foreground "white"
-     :weight 'bold
-     :box nil)
-    (set-face-attribute ; 非アクティブなタブ
-     'tabbar-unselected nil
-     :background "white"
-     :foreground "black"
-     :box nil)
-    ))
-(if window-system
-    (tabbar-init))
 
 ;;;
 ;;; Theme
 ;;;
 (load-theme 'misterioso t)
 
-;;;
-;;; Proxy
-;;;
-(defun proxy-init()
-  (interactive)
-  (setq url-proxy-services
-	'(
-	  ("http" . "jpyoip01.mgmt.ericsson.se:8080")
-	  ("ftp" . "jpyoip01.mgmt.ericsson.se:8080")
-	  ("https" . "jpyoip01.mgmt.ericsson.se:8080")
-	  ("no_proxy" . "127.0.0.1,localhost")
-	  )))
 ;;;
 ;;; Org
 ;;;
@@ -298,6 +244,63 @@
 ;;; My OpenSSL
 ;;;
 (require 'my-openssl)
+
+;;;
+;;; My Function
+;;;
+(defun my-func-safe (_func)
+  "Catch an error when executing function"
+  (lexical-let
+      ((func _func))
+    (lambda (&rest args)
+      (condition-case err
+	  (apply func args)
+	(error nil)
+	))))
+
+(fset 'safe-require (my-func-safe #'require))
+(fset 'safe-load-library (my-func-safe #'load-library))
+
+
+;;;
+;;; Tabbar.el
+;;;
+(if window-system
+    (safe-require
+     'tabbar
+     (progn
+       (tabbar-mode)
+       (global-set-key "\M-]" 'tabbar-forward)  ; 次のタブ
+       (global-set-key "\M-[" 'tabbar-backward) ; 前のタブ
+       ;; タブ上でマウスホイールを使わない
+       (tabbar-mwheel-mode nil)
+       ;; グループを使わない
+       (setq tabbar-buffer-groups-function nil)
+       ;; 左側のボタンを消す
+       (dolist (btn '(tabbar-buffer-home-button
+		      tabbar-scroll-left-button
+		      tabbar-scroll-right-button))
+	 (set btn (cons (cons "" nil)
+			(cons "" nil))))
+       ;; 色設定
+       ;;
+       (set-face-attribute ; バー自体の色
+	'tabbar-default nil
+	:background "white"
+	:family "Inconsolata"
+	:height 0.75)  ; same font size with buffer if height is 1.0
+       (set-face-attribute ; アクティブなタブ
+	'tabbar-selected nil
+	:background "black"
+	:foreground "white"
+	:weight 'bold
+	:box nil)
+       (set-face-attribute ; 非アクティブなタブ
+	'tabbar-unselected nil
+	:background "white"
+	:foreground "black"
+	:box nil)
+       )))
 
 
 ;;;
