@@ -24,7 +24,7 @@
 (defconst my-default-registry-file "~/.registry.xml")
 (setq my-registry-alist
       '(
-	("JP00086284" . "~/Documents/etc/registry.xml")
+	("JP00202153" . "~/Documents/etc/registry.xml")
 	("SURFACEPRO3" . "~/Documents/etc/registry.xml")
 	))
 
@@ -73,8 +73,8 @@
 ;;;
 (if (and window-system windows-p)
     (progn
-      (setq ms-gothic-string (encode-coding-string "ＭＳ ゴシック" 'sjis))
-      (set-default-font (concat ms-gothic-string " 12"))
+      (setq ms-gothic-string (encode-coding-string "MS Gothic" 'sjis))
+      (set-default-font (concat ms-gothic-string " 11"))
       (set-fontset-font (frame-parameter nil 'font)
 			'japanese-jisx0208
 			(cons ms-gothic-string "unicode-bmp")
@@ -265,6 +265,12 @@
 ;;;
 ;;; Tabbar.el
 ;;;
+(defun my-tabbar-buffer-list ()
+  (remove-if
+   (lambda (buffer)
+     (find (aref (buffer-name buffer) 0) " *"))
+   (buffer-list)))
+
 (if window-system
     (safe-require
      'tabbar
@@ -300,6 +306,7 @@
 	:background "white"
 	:foreground "black"
 	:box nil)
+       (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
        )))
 
 
