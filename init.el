@@ -12,7 +12,7 @@
 ;;; ~/AppData/Roaming/.emacs.d/init.el
 ;;;
 ;;; (setenv "HOME" "C:/Users/XXXX")
-;;; (setq user-emacs-directory "~/Dropbox/.emacs.d")
+;;; (setq user-emacs-directory "~/.emacs.d")
 ;;; (load-file (expand-file-name "init.el" user-emacs-directory))
 ;;;
 
