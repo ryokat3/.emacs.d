@@ -73,8 +73,8 @@
 ;;;
 (if (and window-system windows-p)
     (progn
-      (setq ms-gothic-string (encode-coding-string "MS Gothic" 'sjis))
-      (set-default-font (concat ms-gothic-string " 11"))
+      (setq ms-gothic-string (encode-coding-string "Myrica M" 'sjis))
+      (set-default-font (concat ms-gothic-string " 12"))
       (set-fontset-font (frame-parameter nil 'font)
 			'japanese-jisx0208
 			(cons ms-gothic-string "unicode-bmp")
@@ -108,6 +108,42 @@
 (require 'server)
 (unless (server-running-p)
   (server-start)) ;; emacsclient
+
+;;;
+;;; Line Number
+;;;
+(require 'linum)
+(global-linum-mode)
+
+;;;
+;;; Semi-transparent
+;;;
+;; 背景を半透明にする
+(defun setmswglassframe ()
+  (setq default-frame-alist
+	(append (list
+		 '(alpha . (90 85))
+		 ) default-frame-alist)))
+(if (window-system) (setmswglassframe))
+
+;;;
+;;; MSYS Shell
+;;;
+(defun msyssetup ()
+  ;; Shell Mode
+  ;; MSYS の bash を使用します。
+  (setq explicit-shell-file-name "c:/local_data/app/msys/usr/bin/bash.exe")
+  (setq shell-file-name "c:/local_data/app/msys/usr/bin/sh.exe")
+  (setq explicit-sh-args '("-login" "-i"))
+  ;; SHELL で ^M が付く場合は ^M を削除します。
+  (add-hook 'shell-mode-hook
+	    (lambda ()
+	      (set-buffer-process-coding-system 'undecided-dos 'sjis-unix)))
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+  ;; shell-mode での保管(for drive letter)
+  (setq shell-file-name-chars "~/A-Za-z0-9_^$!#%&{}@`'.,:()-"))
+
+(if (and window-system windows-p) (msyssetup))
 
 ;;;
 ;;; Registry
