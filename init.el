@@ -73,7 +73,7 @@
 ;;;
 (if (and window-system windows-p)
     (progn
-      (setq ms-gothic-string (encode-coding-string "Myrica M" 'sjis))
+      (setq ms-gothic-string (encode-coding-string "MS Gothic" 'sjis))
       (set-default-font (concat ms-gothic-string " 12"))
       (set-fontset-font (frame-parameter nil 'font)
 			'japanese-jisx0208
