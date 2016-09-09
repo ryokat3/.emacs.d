@@ -344,7 +344,68 @@
 	:box nil)
        (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
        )))
+;;;
+;;; https://www49.atwiki.jp/ntemacs/pages/28.html
+;;;
+;;; fakecygpty
+;;;
 
+;; process-connection-type が nil で start-process がコールされるけれども、fakecygpty を経由して
+;; 起動したいプログラムの名称を列挙する
+(defvar fakecygpty-program-list '("bash"))
+
+;; fakecygpty を経由するかを判断してプログラムを起動する
+(advice-add
+ 'start-process
+ :around (lambda (orig-fun &rest args)
+	   (when (and (nth 2 args)
+		      (or process-connection-type
+			  (member
+			   (replace-regexp-in-string
+			    "\\.exe$" ""
+			    (file-name-nondirectory (nth 2 args)))
+			   fakecygpty-program-list)))
+	     (push "fakecygpty" (nthcdr 2 args)))
+	   (apply orig-fun args))
+ '((depth . 100)))
+
+;; fakecygpty を経由して起動したプロセスに対し、コントロールキーを直接送信する
+(cl-loop for (func ctrl-key) in '((interrupt-process "C-c")
+                                  (quit-process      "C-\\")
+                                  (stop-process      "C-z")
+                                  (process-send-eof  "C-d"))
+         do (eval
+	     `(advice-add
+	       ',func
+	       :around (lambda (orig-fun &rest args)
+			 (let ((process
+				(or (nth 0 args)
+				    (get-buffer-process (current-buffer)))))
+			   (if (string= (car (process-command process)) "fakecygpty")
+			       (process-send-string (nth 0 args) (kbd ,ctrl-key))
+			     (apply orig-fun args)))))))
+
+(defconst w32-pipe-limit 4096)
+
+(defun ad-process-send-string (orig-fun &rest args)
+  (if (not (eq (process-type (nth 0 args)) 'real))
+      (apply orig-fun args)
+    (let* ((process (or (nth 0 args)
+                        (get-buffer-process (current-buffer))))
+           (send-string (encode-coding-string
+			 (nth 1 args)
+			 (cdr (process-coding-system (get-process process)))))
+           (send-string-length (length send-string)))
+      (let ((inhibit-eol-conversion t)
+            (from 0)
+            to)
+        (while (< from send-string-length)
+          (setq to (min (+ from w32-pipe-limit) send-string-length))
+          (setf (nth 1 args) (substring send-string from to))
+          (apply orig-fun args)
+          (setq from to))))))
+
+(advice-add 'process-send-string :around #'ad-process-send-string)
 
 ;;;
 ;;; CUSTOM (DON'T EDIT)
