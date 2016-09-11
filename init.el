@@ -209,12 +209,12 @@
 ;;; exec-path
 ;;;
 (cond
- ((not (boundp 'emacs.exec-path)) nil)
- ((listp emacs.exec-path)
+ ((not (boundp 'pathlist.path)) nil)
+ ((listp pathlist.path)
   (mapcar (lambda (path) (setq exec-path (cons path exec-path)))
-	  emacs.exec-path))
- ((stringp emacs.exec-path)
-  (setq exec-path (cons emacs.exec-path exec-path))))
+	  pathlist.path))
+ ((stringp pathlist.path)
+  (setq exec-path (cons pathlist.path exec-path))))
 
 
 ;;;
@@ -352,9 +352,10 @@
 
 (defun fakecygpty-init ()
   (progn
-    ;; process-connection-type が nil で start-process がコールされるけれども、fakecygpty を経由して
+    ;; process-connection-type が nil で start-process が
+    ;; コールされるけれども、fakecygpty を経由して
     ;; 起動したいプログラムの名称を列挙する
-    (defvar fakecygpty-program-list '("bash"))
+    (defvar fakecygpty-program-list '("bash" "sh" "scp" "ssh"))
 
     ;; fakecygpty を経由するかを判断してプログラムを起動する
     (advice-add
@@ -372,7 +373,8 @@
 	       (apply orig-fun args))
      '((depth . 100)))
 
-    ;; fakecygpty を経由して起動したプロセスに対し、コントロールキーを直接送信する
+    ;; fakecygpty を経由して起動したプロセスに対し、
+    ;; コントロールキーを直接送信する
     (cl-loop for (func ctrl-key) in
 	     '((interrupt-process "C-c")
 	       (quit-process      "C-\\")
@@ -410,8 +412,24 @@
 	      (setq from to))))))
 
     (advice-add 'process-send-string :around #'ad-process-send-string)
+    (setq tramp-copy-size-limit nil)
     ))
-(if windows-p (fakecygpty-init))
+(when windows-p (fakecygpty-init))
+
+;;;
+;;; dired-open
+;;;
+(when (require 'dired-open nil t)
+  (setq dired-open-extensions
+	(mapcar (lambda (x) (cons x "start"))
+	     '("exe" "docx" "doc" "xlsx" "xls" "pptx" "ppt"
+	       "pcap" "pcapng"))))
+
+
+;;;
+;;; Open Startup
+;;;
+(when (boundp 'emacs.startup) (find-file emacs.startup))
 
 ;;;
 ;;; CUSTOM (DON'T EDIT)
