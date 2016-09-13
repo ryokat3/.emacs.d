@@ -71,32 +71,31 @@
 ;;;
 ;;; Japanese Fonts
 ;;;
-(if (and window-system windows-p)
-    (progn
-      (setq ms-gothic-string (encode-coding-string "MyricaM M" 'sjis))
-      (set-default-font (concat ms-gothic-string " 12"))
-      (set-fontset-font (frame-parameter nil 'font)
-			'japanese-jisx0208
-			(cons ms-gothic-string "unicode-bmp")
-			)
-      (set-fontset-font (frame-parameter nil 'font)
-			'katakana-jisx0201
-			(cons ms-gothic-string "unicode-bmp")
-			)))
+(when (and window-system windows-p)
+  (setq ms-gothic-string (encode-coding-string "MyricaM M" 'sjis))
+  (set-default-font (concat ms-gothic-string " 12"))
+  (set-fontset-font (frame-parameter nil 'font)
+		    'japanese-jisx0208
+		    (cons ms-gothic-string "unicode-bmp")
+		    )
+  (set-fontset-font (frame-parameter nil 'font)
+		    'katakana-jisx0201
+		    (cons ms-gothic-string "unicode-bmp")
+		    )
+  )
 
 ;; 日本語入力のための設定
-(if windows-p
-    (progn
-      (set-keyboard-coding-system 'cp932)
-      (prefer-coding-system 'utf-8-dos)
-      (set-file-name-coding-system 'cp932)
-      (setq default-process-coding-system '(cp932 . cp932))
-      (setq default-input-method "W32-IME")
-      (setq-default w32-ime-mode-line-state-indicator "[Aa]")
-      (setq w32-ime-mode-line-state-indicator-list '("[Aa]" "[あ]" "[Aa]"))
-      (setq w32-ime-buffer-switch-p nil)
-      (w32-ime-initialize)
-      ))
+(when windows-p
+  (set-keyboard-coding-system 'cp932)
+  (prefer-coding-system 'utf-8-dos)
+  (set-file-name-coding-system 'cp932)
+  (setq default-process-coding-system '(cp932 . cp932))
+  (setq default-input-method "W32-IME")
+  (setq-default w32-ime-mode-line-state-indicator "[Aa]")
+  (setq w32-ime-mode-line-state-indicator-list '("[Aa]" "[あ]" "[Aa]"))
+  (setq w32-ime-buffer-switch-p nil)
+  (w32-ime-initialize)
+  )
 ;;;
 ;;; Tool Bar
 ;;;
@@ -111,24 +110,24 @@
 ;;;
 ;;; Line Number
 ;;;
-(require 'linum)
-(global-linum-mode)
+(when (require 'linum nil t)
+  (global-linum-mode)
+  )
 
 ;;;
 ;;; Semi-transparent
 ;;;
-(defun setmswglassframe ()
+(when window-system
   (setq default-frame-alist
 	(append (list
 		 '(alpha . (95 90))
-		 ) default-frame-alist)))
-(if (window-system) (setmswglassframe))
+		 ) default-frame-alist))
+  )
 
 ;;;
 ;;; MSYS Shell
 ;;;
-(defun msyssetup ()
-  ;; Shell Mode
+(when (and window-system windows-p)
   ;; MSYS の bash を使用します。
   (setq explicit-shell-file-name "c:/local_data/app/msys64/usr/bin/bash.exe")
   (setq shell-file-name "c:/local_data/app/msys64/usr/bin/bash.exe")
@@ -140,9 +139,8 @@
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
   ;; shell-mode での保管(for drive letter)
   (setq shell-file-name-chars "~/A-Za-z0-9_^$!#%&{}@`'.,:()-")
-  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
-
-(if (and window-system windows-p) (msyssetup))
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+  )
 
 ;;;
 ;;; Registry
@@ -278,7 +276,7 @@
 ;;;
 ;;; My OpenSSL
 ;;;
-(require 'my-openssl)
+(require 'my-openssl nil t)
 
 ;;;
 ;;; My Function
@@ -293,10 +291,6 @@
 	(error nil)
 	))))
 
-(fset 'safe-require (my-func-safe #'require))
-(fset 'safe-load-library (my-func-safe #'load-library))
-
-
 ;;;
 ;;; Tabbar.el
 ;;;
@@ -306,115 +300,111 @@
      (find (aref (buffer-name buffer) 0) " *"))
    (buffer-list)))
 
-(if window-system
-    (safe-require
-     'tabbar
-     (progn
-       (tabbar-mode)
-       (global-set-key "\M-]" 'tabbar-forward)  ; 次のタブ
-       (global-set-key "\M-[" 'tabbar-backward) ; 前のタブ
-       (setq tabbar-separator '(1.0))
-       ;; タブ上でマウスホイールを使わない
-       (tabbar-mwheel-mode nil)
-       ;; グループを使わない
-       (setq tabbar-buffer-groups-function nil)
-       ;; 左側のボタンを消す
-       (dolist (btn '(tabbar-buffer-home-button
-		      tabbar-scroll-left-button
-		      tabbar-scroll-right-button))
-	 (set btn (cons (cons "" nil)
-			(cons "" nil))))
-       ;; 色設定
-       ;;
-       (set-face-attribute ; バー自体の色
-	'tabbar-default nil
-	:background "white"
-	:family "Inconsolata"
-	:height 0.75)  ; same font size with buffer if height is 1.0
-       (set-face-attribute ; アクティブなタブ
-	'tabbar-selected nil
-	:background "black"
-	:foreground "white"
-	:weight 'bold
-	:box nil)
-       (set-face-attribute ; 非アクティブなタブ
-	'tabbar-unselected nil
-	:background "white"
-	:foreground "black"
-	:box nil)
-       (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
-       )))
+(when (and (require 'tabbar nil t) window-system)
+  (tabbar-mode)
+  (global-set-key "\M-]" 'tabbar-forward)  ; 次のタブ
+  (global-set-key "\M-[" 'tabbar-backward) ; 前のタブ
+  (setq tabbar-separator '(1.0))
+  ;; タブ上でマウスホイールを使わない
+  (tabbar-mwheel-mode nil)
+  ;; グループを使わない
+  (setq tabbar-buffer-groups-function nil)
+  ;; 左側のボタンを消す
+  (dolist (btn '(tabbar-buffer-home-button
+		 tabbar-scroll-left-button
+		 tabbar-scroll-right-button))
+    (set btn (cons (cons "" nil)
+		   (cons "" nil))))
+  ;; 色設定
+  ;;
+  (set-face-attribute ; バー自体の色
+   'tabbar-default nil
+   :background "white"
+   :family "Inconsolata"
+   :height 0.75)  ; same font size with buffer if height is 1.0
+  (set-face-attribute ; アクティブなタブ
+   'tabbar-selected nil
+   :background "black"
+   :foreground "white"
+   :weight 'bold
+   :box nil)
+  (set-face-attribute ; 非アクティブなタブ
+   'tabbar-unselected nil
+   :background "white"
+   :foreground "black"
+   :box nil)
+  (setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
+  )
+
+
 ;;;
 ;;; https://www49.atwiki.jp/ntemacs/pages/28.html
 ;;;
 ;;; fakecygpty
 ;;;
+(when windows-p
+  ;; process-connection-type が nil で start-process が
+  ;; コールされるけれども、fakecygpty を経由して
+  ;; 起動したいプログラムの名称を列挙する
+  (defvar fakecygpty-program-list '("bash" "sh" "scp" "ssh"))
 
-(defun fakecygpty-init ()
-  (progn
-    ;; process-connection-type が nil で start-process が
-    ;; コールされるけれども、fakecygpty を経由して
-    ;; 起動したいプログラムの名称を列挙する
-    (defvar fakecygpty-program-list '("bash" "sh" "scp" "ssh"))
+  ;; fakecygpty を経由するかを判断してプログラムを起動する
+  (advice-add
+   'start-process
+   :around (lambda (orig-fun &rest args)
+	     (when
+		 (and (nth 2 args)
+		      (or process-connection-type
+			  (member
+			   (replace-regexp-in-string
+			    "\\.exe$" ""
+			    (file-name-nondirectory (nth 2 args)))
+			   fakecygpty-program-list)))
+	       (push "fakecygpty" (nthcdr 2 args)))
+	     (apply orig-fun args))
+   '((depth . 100)))
 
-    ;; fakecygpty を経由するかを判断してプログラムを起動する
-    (advice-add
-     'start-process
-     :around (lambda (orig-fun &rest args)
-	       (when
-		   (and (nth 2 args)
-			(or process-connection-type
-			    (member
-			     (replace-regexp-in-string
-			      "\\.exe$" ""
-			      (file-name-nondirectory (nth 2 args)))
-			     fakecygpty-program-list)))
-		 (push "fakecygpty" (nthcdr 2 args)))
-	       (apply orig-fun args))
-     '((depth . 100)))
+  ;; fakecygpty を経由して起動したプロセスに対し、
+  ;; コントロールキーを直接送信する
+  (cl-loop for (func ctrl-key) in
+	   '((interrupt-process "C-c")
+	     (quit-process      "C-\\")
+	     (stop-process      "C-z")
+	     (process-send-eof  "C-d"))
+	   do (eval
+	       `(advice-add
+		 ',func
+		 :around (lambda (orig-fun &rest args)
+			   (let ((process
+				  (or (nth 0 args)
+				      (get-buffer-process (current-buffer)))))
+			     (if (string= (car (process-command process)) "fakecygpty")
+				 (process-send-string (nth 0 args) (kbd ,ctrl-key))
+			       (apply orig-fun args)))))))
 
-    ;; fakecygpty を経由して起動したプロセスに対し、
-    ;; コントロールキーを直接送信する
-    (cl-loop for (func ctrl-key) in
-	     '((interrupt-process "C-c")
-	       (quit-process      "C-\\")
-	       (stop-process      "C-z")
-	       (process-send-eof  "C-d"))
-	     do (eval
-		 `(advice-add
-		   ',func
-		   :around (lambda (orig-fun &rest args)
-			     (let ((process
-				    (or (nth 0 args)
-					(get-buffer-process (current-buffer)))))
-			       (if (string= (car (process-command process)) "fakecygpty")
-				   (process-send-string (nth 0 args) (kbd ,ctrl-key))
-				 (apply orig-fun args)))))))
+  (defconst w32-pipe-limit 4096)
 
-    (defconst w32-pipe-limit 4096)
+  (defun ad-process-send-string (orig-fun &rest args)
+    (if (not (eq (process-type (nth 0 args)) 'real))
+	(apply orig-fun args)
+      (let* ((process (or (nth 0 args)
+			  (get-buffer-process (current-buffer))))
+	     (send-string (encode-coding-string
+			   (nth 1 args)
+			   (cdr (process-coding-system (get-process process)))))
+	     (send-string-length (length send-string)))
+	(let ((inhibit-eol-conversion t)
+	      (from 0)
+	      to)
+	  (while (< from send-string-length)
+	    (setq to (min (+ from w32-pipe-limit) send-string-length))
+	    (setf (nth 1 args) (substring send-string from to))
+	    (apply orig-fun args)
+	    (setq from to))))))
 
-    (defun ad-process-send-string (orig-fun &rest args)
-      (if (not (eq (process-type (nth 0 args)) 'real))
-	  (apply orig-fun args)
-	(let* ((process (or (nth 0 args)
-			    (get-buffer-process (current-buffer))))
-	       (send-string (encode-coding-string
-			     (nth 1 args)
-			     (cdr (process-coding-system (get-process process)))))
-	       (send-string-length (length send-string)))
-	  (let ((inhibit-eol-conversion t)
-		(from 0)
-		to)
-	    (while (< from send-string-length)
-	      (setq to (min (+ from w32-pipe-limit) send-string-length))
-	      (setf (nth 1 args) (substring send-string from to))
-	      (apply orig-fun args)
-	      (setq from to))))))
-
-    (advice-add 'process-send-string :around #'ad-process-send-string)
-    (setq tramp-copy-size-limit nil)
-    ))
-(when windows-p (fakecygpty-init))
+  (advice-add 'process-send-string :around #'ad-process-send-string)
+  (setq tramp-copy-size-limit nil)
+  )
 
 ;;;
 ;;; dired-open
