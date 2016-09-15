@@ -99,7 +99,9 @@
 ;;;
 ;;; Tool Bar
 ;;;
-(tool-bar-mode 0)
+(when window-system
+  (tool-bar-mode 0)
+  )
 
 ;;;
 ;;; Emacs Server
