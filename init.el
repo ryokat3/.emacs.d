@@ -21,6 +21,21 @@
 ;;;
 ;;;  ( hostname . registry-file )
 ;;;
+
+;;; Added by Package.el.  This must come before configurations of
+;;; installed packages.  Don't delete this line.  If you don't want it,
+;;; just comment it out by adding a semicolon to the start of the line.
+;;; You may delete these explanatory comments.
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
+(package-initialize)
+
+
 (defconst my-default-registry-file "~/.registry.xml")
 (setq my-registry-alist
       '(
@@ -90,11 +105,13 @@
   (prefer-coding-system 'utf-8-dos)
   (set-file-name-coding-system 'cp932)
   (setq default-process-coding-system '(cp932 . cp932))
-  (setq default-input-method "W32-IME")
-  (setq-default w32-ime-mode-line-state-indicator "[Aa]")
-  (setq w32-ime-mode-line-state-indicator-list '("[Aa]" "[あ]" "[Aa]"))
-  (setq w32-ime-buffer-switch-p nil)
-  (w32-ime-initialize)
+  (when (boundp #'w32-ime-initialize)
+    (setq default-input-method "W32-IME")
+    (setq-default w32-ime-mode-line-state-indicator "[Aa]")
+    (setq w32-ime-mode-line-state-indicator-list '("[Aa]" "[あ]" "[Aa]"))
+    (setq w32-ime-buffer-switch-p nil)
+    (w32-ime-initialize)
+    )
   )
 ;;;
 ;;; Tool Bar
@@ -113,7 +130,7 @@
 ;;; Line Number
 ;;;
 (when (require 'linum nil t)
-  (global-linum-mode)
+  (global-set-key [f9] 'linum-mode)
   )
 
 ;;;
@@ -416,6 +433,18 @@
 	(mapcar (lambda (x) (cons x "start"))
 	     '("exe" "docx" "doc" "xlsx" "xls" "pptx" "ppt"
 	       "pcap" "pcapng"))))
+
+;;;
+;;; Markdown
+;;;
+(when (require 'markdown-mode nil t)
+  (setq markdown-command-needs-filename nil)
+  (setq markdown-coding-system 'utf-8-dos)
+  (setq markdown-command "pandoc --smart -f markdown_github -t html5")
+  (setq markdown-css-paths '("C:/local_data/etc/github-markdown.css"))
+  (setq markdown-xhtml-header-content "<link href=\"http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css\" rel=\"stylesheet\" />")
+  )
+  
 
 
 ;;;
