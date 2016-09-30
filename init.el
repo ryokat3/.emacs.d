@@ -39,7 +39,7 @@
 (defconst my-default-registry-file "~/.registry.xml")
 (setq my-registry-alist
       '(
-	("JP00202153" . "~/Documents/etc/registry.xml")
+	("JP00202153" . "~/doc/etc/registry.xml")
 	("SURFACEPRO3" . "~/Documents/etc/registry.xml")
 	))
 
