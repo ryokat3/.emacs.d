@@ -22,10 +22,10 @@
 ;;;  ( hostname . registry-file )
 ;;;
 
-;;; Added by Package.el.  This must come before configurations of
-;;; installed packages.  Don't delete this line.  If you don't want it,
-;;; just comment it out by adding a semicolon to the start of the line.
-;;; You may delete these explanatory comments.
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -35,11 +35,10 @@
 
 (package-initialize)
 
-
 (defconst my-default-registry-file "~/.registry.xml")
 (setq my-registry-alist
       '(
-	("JP00202153" . "~/doc/etc/registry.xml")
+	("JP00202153" . "~/Documents/etc/registry.xml")
 	("SURFACEPRO3" . "~/Documents/etc/registry.xml")
 	))
 
@@ -106,11 +105,37 @@
   (set-file-name-coding-system 'cp932)
   (setq default-process-coding-system '(cp932 . cp932))
   (when (boundp #'w32-ime-initialize)
+    ;; (set-language-environment "UTF-8") ;; UTF-8 でも問題ないので適宜コメントアウトしてください
     (setq default-input-method "W32-IME")
-    (setq-default w32-ime-mode-line-state-indicator "[Aa]")
-    (setq w32-ime-mode-line-state-indicator-list '("[Aa]" "[あ]" "[Aa]"))
-    (setq w32-ime-buffer-switch-p nil)
+    (setq-default w32-ime-mode-line-state-indicator "[--]")
+    (setq w32-ime-mode-line-state-indicator-list '("[--]" "[あ]" "[--]"))
     (w32-ime-initialize)
+    ;; 日本語入力時にカーソルの色を変える設定 (色は適宜変えてください)
+    (add-hook 'w32-ime-on-hook '(lambda () (set-cursor-color "coral4")))
+    (add-hook 'w32-ime-off-hook '(lambda () (set-cursor-color "black")))
+
+    ;; 以下はお好みで設定してください
+    ;; 全てバッファ内で日本語入力中に特定のコマンドを実行した際の日本語入力無効化処理です
+    ;; もっと良い設定方法がありましたら issue などあげてもらえると助かります
+
+    ;; ミニバッファに移動した際は最初に日本語入力が無効な状態にする
+    (add-hook 'minibuffer-setup-hook 'deactivate-input-method)
+
+    ;; isearch に移行した際に日本語入力を無効にする
+    (add-hook 'isearch-mode-hook
+	      '(lambda ()
+		 (deactivate-input-method)
+		 (setq w32-ime-composition-window (minibuffer-window))))
+    (add-hook 'isearch-mode-end-hook
+	      '(lambda () (setq w32-ime-composition-window nil)))
+
+    ;; helm 使用中に日本語入力を無効にする
+    (advice-add 'helm :around
+		'(lambda (orig-fun &rest args)
+		   (let ((select-window-functions nil)
+			 (w32-ime-composition-window (minibuffer-window)))
+		     (deactivate-input-method)
+		     (apply orig-fun args))))
     )
   )
 ;;;
@@ -141,24 +166,6 @@
 	(append (list
 		 '(alpha . (95 90))
 		 ) default-frame-alist))
-  )
-
-;;;
-;;; MSYS Shell
-;;;
-(when (and window-system windows-p)
-  ;; MSYS の bash を使用します。
-  (setq explicit-shell-file-name "c:/local_data/app/msys64/usr/bin/bash.exe")
-  (setq shell-file-name "c:/local_data/app/msys64/usr/bin/bash.exe")
-  (setq explicit-sh-args '("-login" "-i"))
-  ;; SHELL で ^M が付く場合は ^M を削除します。
-  (add-hook 'shell-mode-hook
-	    (lambda ()
-	      (set-buffer-process-coding-system 'undecided-dos 'sjis-unix)))
-  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-  ;; shell-mode での保管(for drive letter)
-  (setq shell-file-name-chars "~/A-Za-z0-9_^$!#%&{}@`'.,:()-")
-  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
   )
 
 ;;;
@@ -269,6 +276,25 @@
 ;;; Theme
 ;;;
 (load-theme 'misterioso t)
+
+;;;
+;;; MSYS Shell
+;;;
+(when (and window-system windows-p)
+  ;; MSYS の bash を使用します。
+  (setq explicit-shell-file-name emacs.shell)
+  (setq shell-file-name "bash")
+  (setenv "SHELL" shell-file-name) 
+  ;;(setq explicit-sh-args '("-login" "-i"))
+  (setq explicit-sh-args '("--noediting" "-i"))
+  ;; SHELL で ^M が付く場合は ^M を削除します。
+  (add-hook 'shell-mode-hook
+	    (lambda ()
+	      (set-buffer-process-coding-system 'undecided-dos 'sjis-unix)))
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+  ;; shell-mode での保管(for drive letter)
+  (setq shell-file-name-chars "~/A-Za-z0-9_^$!#%&{}@`'.,:()-")
+  )
 
 ;;;
 ;;; Org
@@ -440,12 +466,21 @@
 (when (require 'markdown-mode nil t)
   (setq markdown-command-needs-filename nil)
   (setq markdown-coding-system 'utf-8-dos)
-  (setq markdown-command "pandoc --smart -f markdown_github -t html5")
+  (setq markdown-command "pandoc")
   (setq markdown-css-paths '("C:/local_data/etc/github-markdown.css"))
   (setq markdown-xhtml-header-content "<link href=\"http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css\" rel=\"stylesheet\" />")
   )
   
-
+;;;
+;;; Neo Tree
+;;;
+(when (require 'neotree nil t)
+  (setq neo-window-width 32)
+  (setq neo-create-file-auto-open t)
+  (setq neo-keymap-style 'concise)
+  (setq neo-smart-open t)
+  (global-set-key [f8] 'neotree-toggle)
+  )
 
 ;;;
 ;;; Open Startup
@@ -463,7 +498,10 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
- '(custom-enabled-themes (quote (wheatgrass))))
+ '(custom-enabled-themes (quote (wheatgrass)))
+ '(package-selected-packages
+   (quote
+    (tabbar recentf-ext pandoc-mode pandoc neotree magit helm evil dired-open all-the-icons))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
