@@ -27,6 +27,38 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 
+
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -35,6 +67,29 @@
 
 (package-initialize)
 
+(package-initialize)
+
+(package-initialize)
+
+(package-initialize)
+
+(package-initialize)
+
+(package-initialize)
+
+(package-initialize)
+
+;;;
+;;; Spacemacs
+;;;
+;(setq spacemacs-start-directory "~/.emacs.d/spacemacs/")
+;(load-file (concat spacemacs-start-directory "init.el"))
+
+
+
+;;;
+;;; Registry
+;;;
 (defconst my-default-registry-file "~/.registry.xml")
 (setq my-registry-alist
       '(
@@ -470,7 +525,14 @@
   (setq markdown-css-paths '("C:/local_data/etc/github-markdown.css"))
   (setq markdown-xhtml-header-content "<link href=\"http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css\" rel=\"stylesheet\" />")
   )
-  
+
+;;;
+;;; Bash Auto Completion
+;;;
+(when (require 'bash-completion nil t)
+  (bash-completion-setup)
+  )
+
 ;;;
 ;;; Neo Tree
 ;;;
@@ -483,9 +545,18 @@
   )
 
 ;;;
-;;; Open Startup
+;;; My Convenient
 ;;;
-(when (boundp 'emacs.startup) (find-file emacs.startup))
+(global-set-key [f6] '(lambda ()
+			(interactive)
+			(progn (switch-to-buffer (get-buffer-create "*Markdown Memo*"))
+			       (markdown-mode))))
+(when
+    (boundp 'emacs.startup)
+  (global-set-key [f7] '(lambda () (interactive) (find-file emacs.startup)))
+  )
+
+
 
 ;;;
 ;;; CUSTOM (DON'T EDIT)
@@ -501,7 +572,7 @@
  '(custom-enabled-themes (quote (wheatgrass)))
  '(package-selected-packages
    (quote
-    (tabbar recentf-ext pandoc-mode pandoc neotree magit helm evil dired-open all-the-icons))))
+    (markdown-mode py-autopep8 bash-completion tabbar recentf-ext pandoc-mode pandoc neotree magit helm evil dired-open all-the-icons))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
