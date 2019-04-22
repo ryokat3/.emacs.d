@@ -230,7 +230,7 @@
   (let ((frame (selected-frame)))
     (set-frame-size
      frame
-     112 ;width
+     120 ;width
 ;     (- (/ (- (x-display-pixel-height) 40) (frame-char-height)) 5)) ;height
      48)
     (set-frame-position frame 5 5)
