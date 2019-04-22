@@ -55,6 +55,7 @@
 (setq max-lisp-eval-depth 5000)
 
 (setq inhibit-startup-message t)
+(cd (getenv "HOME"))
 
 ;;;
 ;;; Settings for Japanese
@@ -86,7 +87,7 @@
 ;;;
 (when (and window-system windows-p)
   (setq ms-gothic-string (encode-coding-string "MyricaM M" 'sjis))
-  (set-default-font (concat ms-gothic-string " 11"))
+  (set-default-font (concat ms-gothic-string " 14"))
   (set-fontset-font (frame-parameter nil 'font)
 		    'japanese-jisx0208
 		    (cons ms-gothic-string "unicode-bmp")
@@ -103,40 +104,41 @@
   (prefer-coding-system 'utf-8-dos)
   (set-file-name-coding-system 'cp932)
   (setq default-process-coding-system '(cp932 . cp932))
-  (when (boundp #'w32-ime-initialize)
+;  (when (boundp #'w32-ime-initialize)
     ;; (set-language-environment "UTF-8") ;; UTF-8 でも問題ないので適宜コメントアウトしてください
-    (setq default-input-method "W32-IME")
-    (setq-default w32-ime-mode-line-state-indicator "[--]")
-    (setq w32-ime-mode-line-state-indicator-list '("[--]" "[あ]" "[--]"))
-    (w32-ime-initialize)
+;    (setq default-input-method "W32-IME")
+;    (setq-default w32-ime-mode-line-state-indicator "[--]")
+;    (setq w32-ime-mode-line-state-indicator-list '("[--]" "[あ]" "[--]"))
+;    (w32-ime-initialize)
     ;; 日本語入力時にカーソルの色を変える設定 (色は適宜変えてください)
-    (add-hook 'w32-ime-on-hook '(lambda () (set-cursor-color "coral4")))
-    (add-hook 'w32-ime-off-hook '(lambda () (set-cursor-color "black")))
+;    (add-hook 'w32-ime-on-hook '(lambda () (set-cursor-color "coral4")))
+;    (add-hook 'w32-ime-off-hook '(lambda () (set-cursor-color "black")))
 
     ;; 以下はお好みで設定してください
     ;; 全てバッファ内で日本語入力中に特定のコマンドを実行した際の日本語入力無効化処理です
     ;; もっと良い設定方法がありましたら issue などあげてもらえると助かります
 
     ;; ミニバッファに移動した際は最初に日本語入力が無効な状態にする
-    (add-hook 'minibuffer-setup-hook 'deactivate-input-method)
+;    (add-hook 'minibuffer-setup-hook 'deactivate-input-method)
 
     ;; isearch に移行した際に日本語入力を無効にする
-    (add-hook 'isearch-mode-hook
-	      '(lambda ()
-		 (deactivate-input-method)
-		 (setq w32-ime-composition-window (minibuffer-window))))
-    (add-hook 'isearch-mode-end-hook
-	      '(lambda () (setq w32-ime-composition-window nil)))
+;    (add-hook 'isearch-mode-hook
+;	      '(lambda ()
+;		 (deactivate-input-method)
+;		 (setq w32-ime-composition-window (minibuffer-window))))
+;    (add-hook 'isearch-mode-end-hook
+;	      '(lambda () (setq w32-ime-composition-window nil)))
 
     ;; helm 使用中に日本語入力を無効にする
-    (advice-add 'helm :around
-		'(lambda (orig-fun &rest args)
-		   (let ((select-window-functions nil)
-			 (w32-ime-composition-window (minibuffer-window)))
-		     (deactivate-input-method)
-		     (apply orig-fun args))))
-    )
+;    (advice-add 'helm :around
+;		'(lambda (orig-fun &rest args)
+;		   (let ((select-window-functions nil)
+;			 (w32-ime-composition-window (minibuffer-window)))
+;		     (deactivate-input-method)
+;		     (apply orig-fun args))))
+;    )
   )
+
 ;;;
 ;;; Tool Bar
 ;;;
@@ -228,8 +230,9 @@
   (let ((frame (selected-frame)))
     (set-frame-size
      frame
-     80 ;width
-     (- (/ (- (x-display-pixel-height) 40) (frame-char-height)) 5)) ;height
+     112 ;width
+;     (- (/ (- (x-display-pixel-height) 40) (frame-char-height)) 5)) ;height
+     48)
     (set-frame-position frame 5 5)
     ))
 
@@ -496,7 +499,16 @@
   (setq neo-keymap-style 'concise)
   (setq neo-smart-open t)
   (global-set-key [f8] 'neotree-toggle)
+  (when (require 'all-the-icons nil t)
+    (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+    )
   )
+
+;;;
+;;; Icons for Neo Tree
+;;;
+;;; [NOTE] exec M-x all-the-icons-install-fonts
+;;;
 
 ;;;
 ;;; ediff
