@@ -483,6 +483,16 @@
   (setq markdown-xhtml-header-content "<link href=\"http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css\" rel=\"stylesheet\" />")
   )
 
+
+;;;
+;;; YAML
+;;;
+(when (require 'yaml-mode nil t)
+  (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
+  (define-key yaml-mode-map "\C-m" 'newline-and-indent)
+  )
+
+
 ;;;
 ;;; Bash Auto Completion
 ;;;
