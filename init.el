@@ -22,7 +22,7 @@
 ;;;  ( hostname . registry-file )
 ;;;
 
-(package-initialize)
+; (package-initialize)
 
 ;;;
 ;;; Spacemacs
@@ -87,7 +87,8 @@
 ;;;
 (when (and window-system windows-p)
   (setq ms-gothic-string (encode-coding-string "MyricaM M" 'sjis))
-  (set-default-font (concat ms-gothic-string " 14"))
+  ;;(set-default-font (concat ms-gothic-string " 14"))
+  (set-frame-font (concat ms-gothic-string "-16"))
   (set-fontset-font (frame-parameter nil 'font)
 		    'japanese-jisx0208
 		    (cons ms-gothic-string "unicode-bmp")
