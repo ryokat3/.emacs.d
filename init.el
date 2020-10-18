@@ -31,6 +31,11 @@
 ;(load-file (concat spacemacs-start-directory "init.el"))
 
 
+;; Surpress the warning 'Package cl is deprecated' in emacs 27.x
+;;
+(setq byte-compile-warnings '(not cl-functions obsolete))
+
+
 
 ;;;
 ;;; Registry
