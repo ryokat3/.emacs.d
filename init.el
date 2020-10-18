@@ -88,7 +88,8 @@
 (when (and window-system windows-p)
   (setq ms-gothic-string (encode-coding-string "MyricaM M" 'sjis))
   ;;(set-default-font (concat ms-gothic-string " 14"))
-  (set-frame-font (concat ms-gothic-string "-16"))
+  ;;(set-frame-font (concat ms-gothic-string "-16"))
+  (set-frame-font (concat ms-gothic-string "-14"))
   (set-fontset-font (frame-parameter nil 'font)
 		    'japanese-jisx0208
 		    (cons ms-gothic-string "unicode-bmp")
@@ -99,45 +100,46 @@
 		    )
   )
 
+
+
 ;; 日本語入力のための設定
 (when windows-p
   (set-keyboard-coding-system 'cp932)
   (prefer-coding-system 'utf-8-dos)
   (set-file-name-coding-system 'cp932)
   (setq default-process-coding-system '(cp932 . cp932))
-;  (when (boundp #'w32-ime-initialize)
-    ;; (set-language-environment "UTF-8") ;; UTF-8 でも問題ないので適宜コメントアウトしてください
-;    (setq default-input-method "W32-IME")
-;    (setq-default w32-ime-mode-line-state-indicator "[--]")
-;    (setq w32-ime-mode-line-state-indicator-list '("[--]" "[あ]" "[--]"))
-;    (w32-ime-initialize)
-    ;; 日本語入力時にカーソルの色を変える設定 (色は適宜変えてください)
-;    (add-hook 'w32-ime-on-hook '(lambda () (set-cursor-color "coral4")))
-;    (add-hook 'w32-ime-off-hook '(lambda () (set-cursor-color "black")))
+  
+  (when (fboundp 'w32-ime-initialize)
+    (w32-ime-initialize)
 
-    ;; 以下はお好みで設定してください
-    ;; 全てバッファ内で日本語入力中に特定のコマンドを実行した際の日本語入力無効化処理です
-    ;; もっと良い設定方法がありましたら issue などあげてもらえると助かります
+    ;; (set-language-environment "UTF-8") ;; UTF-8 でも問題ないので適宜コメントアウトしてください
+    (setq default-input-method "W32-IME")
+    (setq-default w32-ime-mode-line-state-indicator "[--]")
+    (setq w32-ime-mode-line-state-indicator-list '("[--]" "[あ]" "[--]"))
+
+    ;; 日本語入力時にカーソルの色を変える設定 (色は適宜変えてください)
+    (add-hook 'w32-ime-on-hook '(lambda () (set-cursor-color "coral4")))
+    (add-hook 'w32-ime-off-hook '(lambda () (set-cursor-color "yellow")))
 
     ;; ミニバッファに移動した際は最初に日本語入力が無効な状態にする
-;    (add-hook 'minibuffer-setup-hook 'deactivate-input-method)
+    (add-hook 'minibuffer-setup-hook 'deactivate-input-method)
 
     ;; isearch に移行した際に日本語入力を無効にする
-;    (add-hook 'isearch-mode-hook
-;	      '(lambda ()
-;		 (deactivate-input-method)
-;		 (setq w32-ime-composition-window (minibuffer-window))))
-;    (add-hook 'isearch-mode-end-hook
-;	      '(lambda () (setq w32-ime-composition-window nil)))
+    (add-hook 'isearch-mode-hook
+	      '(lambda ()
+		 (deactivate-input-method)
+		 (setq w32-ime-composition-window (minibuffer-window))))
+    (add-hook 'isearch-mode-end-hook
+	      '(lambda () (setq w32-ime-composition-window nil)))
 
     ;; helm 使用中に日本語入力を無効にする
-;    (advice-add 'helm :around
-;		'(lambda (orig-fun &rest args)
-;		   (let ((select-window-functions nil)
-;			 (w32-ime-composition-window (minibuffer-window)))
-;		     (deactivate-input-method)
-;		     (apply orig-fun args))))
-;    )
+    (advice-add 'helm :around
+		'(lambda (orig-fun &rest args)
+		   (let ((select-window-functions nil)
+			 (w32-ime-composition-window (minibuffer-window)))
+		     (deactivate-input-method)
+		     (apply orig-fun args))))
+    )
   )
 
 ;;;
@@ -541,8 +543,7 @@
 			(interactive)
 			(progn (switch-to-buffer (get-buffer-create "*Markdown Memo*"))
 			       (markdown-mode))))
-(when
-    (boundp 'emacs.startup)
+(when (boundp 'emacs.startup)
   (global-set-key [f7] '(lambda () (interactive) (find-file emacs.startup)))
   )
 
