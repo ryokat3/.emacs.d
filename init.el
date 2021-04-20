@@ -83,9 +83,24 @@
 (setq redisplay-dont-pause t)
 
 ;;;
+;;; melpa
+;;;
+(package-initialize)
+(customize-set-variable 'package-archives
+                        `(,@package-archives
+                          ("melpa" . "https://melpa.org/packages/")))
+
+;;;
+;;; tr-ime
+;;;
+
+
+
+;;;
 ;;; System Type
 (setq windows-p (eq system-type 'windows-nt))
 (setq linux-p (eq system-type 'gnu/linux))
+
 
 ;;;
 ;;; Japanese Fonts
@@ -95,6 +110,7 @@
   ;;(set-default-font (concat ms-gothic-string " 14"))
   ;;(set-frame-font (concat ms-gothic-string "-16"))
   (set-frame-font (concat ms-gothic-string "-14"))
+  (modify-all-frames-parameters '((ime-font . "MyricaM M-14")))
   (set-fontset-font (frame-parameter nil 'font)
 		    'japanese-jisx0208
 		    (cons ms-gothic-string "unicode-bmp")
@@ -109,13 +125,25 @@
 
 ;; 日本語入力のための設定
 (when windows-p
+  (tr-ime-advanced-install)
+  (setq default-input-method "W32-IME")
   (set-keyboard-coding-system 'cp932)
   (prefer-coding-system 'utf-8-dos)
   (set-file-name-coding-system 'cp932)
   (setq default-process-coding-system '(cp932 . cp932))
-  
+
   (when (fboundp 'w32-ime-initialize)
     (w32-ime-initialize)
+
+    ;; IME 制御（yes/no などの入力の時に IME を off にする）
+    (wrap-function-to-control-ime 'universal-argument t nil)
+    (wrap-function-to-control-ime 'read-string nil nil)
+    (wrap-function-to-control-ime 'read-char nil nil)
+    (wrap-function-to-control-ime 'read-from-minibuffer nil nil)
+    (wrap-function-to-control-ime 'y-or-n-p nil nil)
+    (wrap-function-to-control-ime 'yes-or-no-p nil nil)
+    (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
+
 
     ;; (set-language-environment "UTF-8") ;; UTF-8 でも問題ないので適宜コメントアウトしてください
     (setq default-input-method "W32-IME")
@@ -284,7 +312,7 @@
 	     '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (when (< emacs-major-version 24)
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-(package-initialize)
+;(package-initialize)
 
 ;;;
 ;;; GPG
