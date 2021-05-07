@@ -194,12 +194,12 @@
 ;;;
 ;;; Semi-transparent
 ;;;
-(when window-system
-  (setq default-frame-alist
-	(append (list
-		 '(alpha . (95 90))
-		 ) default-frame-alist))
-  )
+;(when window-system
+;  (setq default-frame-alist
+;	(append (list
+;		 '(alpha . (95 90))
+;		 ) default-frame-alist))
+;  )
 
 ;;;
 ;;; Registry
