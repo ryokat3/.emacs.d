@@ -93,6 +93,20 @@
 
 
 ;;;
+;;; 日本語入力のための設定 Linux
+;;;
+(when linux-p
+  (require 'mozc)
+  (setq default-input-method "japanese-mozc")
+  (set-keyboard-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+  (set-file-name-coding-system 'utf-8)
+  (add-to-list 'default-frame-alist
+               '(font . "MyricaM M-18"))
+  (setq mozc-leim-title "あ")
+  )
+
+;;;
 ;;; Japanese Fonts
 ;;;
 (when (and window-system windows-p)
@@ -113,7 +127,8 @@
 
 
 
-;; 日本語入力のための設定
+
+;; 日本語入力のための設定 Windows
 (when windows-p
   (set-keyboard-coding-system 'cp932)
   (prefer-coding-system 'utf-8-dos)
@@ -121,7 +136,7 @@
   (setq default-process-coding-system '(cp932 . cp932))
   )
 
-;; tr-ime + w32-ime 設定
+;; Windows tr-ime + w32-ime 設定
 (when (and (require 'tr-ime nil t) (require 'w32-ime nil t))
   (tr-ime-advanced-install)
   (setq default-input-method "W32-IME")
@@ -164,6 +179,7 @@
 		   (deactivate-input-method)
 		   (apply orig-fun args))))
   )
+
 
 
 ;;;
@@ -584,10 +600,12 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
- '(custom-enabled-themes (quote (wheatgrass)))
+ '(custom-enabled-themes '(wheatgrass))
+ '(package-archives
+   '(("gnu" . "https://elpa.gnu.org/packages/")
+     ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   (quote
-    (persistent-scratch markdown-mode py-autopep8 bash-completion tabbar recentf-ext pandoc-mode pandoc neotree magit helm evil dired-open all-the-icons))))
+   '(typescript-mode yaml-mode persistent-scratch markdown-mode py-autopep8 bash-completion tabbar recentf-ext pandoc-mode pandoc neotree magit helm evil dired-open all-the-icons)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
