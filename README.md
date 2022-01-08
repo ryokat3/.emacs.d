@@ -10,11 +10,11 @@ The .emacs.d directory
 Usage
 -----
 
-1. Clone https://github.com/wak109/.emacs.d.git to your home directory.
+1. Clone https://github.com/ryokat3/.emacs.d.git to your home directory.
 
 
    ```
-   git clone https://github.com/wak109/.emacs.d.git
+   git clone https://github.com/ryokat3/.emacs.d.git
    ```
 
    .emacs.d directory will be created.
@@ -84,7 +84,7 @@ Parameters
 References
 ----------
 
-- [Project Page](https://github.com/wak109/.emacs.d)
+- [Project Page](https://github.com/ryokat3/.emacs.d)
 - [Mastering Markdown](https://guides.github.com/features/mastering-markdown/)
 - [GitHubを使ってみよう！導入と簡単な流れ、よく使うコマンドなど。](http://wp.yat-net.com/?p=3874)
 - [脱GitHub初心者を目指す人のREADMEマークダウン使いこなし術](http://tokkono.cute.coocan.jp/blog/slow/index.php/programming/markdown-skills-for-github-beginners/) 

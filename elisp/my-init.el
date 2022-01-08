@@ -2,17 +2,6 @@
 ;;;
 ;;; init.el -- Emacs init file
 ;;;
-;;;
-;;; SVN Reository:
-;;;
-;;;  - https://myprojectroot.googlecode.com/svn/trunk/myemacs/.emacs.d/
-;;;  - username: wak109
-;;;  - password: generated in https://code.google.com/hosting/settings
-;;;
-;;;
-;;; Note:
-;;;  - Google code accepts 'https' when commiting but never 'http'
-;;;
 
 ;;;
 ;;; Customize
@@ -970,7 +959,7 @@ PORT (int) :: port number
   (setq mew-smtp-auth t)
   (setq mew-smtp-ssl t)
   (setq mew-smtp-ssl-port "465")
-  (setq mew-smtp-user "wak109@gmail.com")
+  (setq mew-smtp-user "ryokat3@gmail.com")
   (setq mew-smtp-server "smtp.gmail.com")
   (setq mew-fcc "%Sent") ; 送信メイルを保存する
   (setq mew-imap-trash-folder "%[Gmail]/ゴミ箱")
