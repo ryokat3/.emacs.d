@@ -577,6 +577,15 @@
   )
 
 ;;;
+;;; imunu-list
+;;;
+(when (require 'imenu-list nil t)
+  (global-set-key [f10] 'imenu-list-smart-toggle)
+  (setq imenu-list-position 'left)
+  )
+
+ 
+;;;
 ;;; My Convenient
 ;;;
 (global-set-key [f6] '(lambda ()
@@ -586,6 +595,7 @@
 (when (boundp 'emacs.startup)
   (global-set-key [f7] '(lambda () (interactive) (find-file emacs.startup)))
   )
+
 
 
 
