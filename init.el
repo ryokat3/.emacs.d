@@ -522,9 +522,10 @@
   (setq markdown-command-needs-filename nil)
   (setq markdown-coding-system 'utf-8-dos)
   (setq markdown-command "pandoc")
-  (setq markdown-css-paths '("C:/local_data/etc/github-markdown.css"))
+  (setq markdown-css-paths '("/c/Users/nrjryka/OneDrive - Ericsson/root/usr/lib/github-markdown.css"))
   (setq markdown-xhtml-header-content "<link href=\"http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css\" rel=\"stylesheet\" />")
   (setq markdown-fontify-code-blocks-natively t)
+  (set-face-attribute 'markdown-code-face nil :inherit 'default)
   )
 
 
