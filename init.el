@@ -47,13 +47,17 @@
 ;;;
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
-(setq auto-save-default nil)
 (define-key global-map "\C-h" 'delete-backward-char)
 (global-set-key "\M-?" 'help-command)
 (global-set-key [M-kanji] 'ignore)
 
 (setq max-specpdl-size 5000)
 (setq max-lisp-eval-depth 5000)
+
+(setq auto-save-default nil)
+(setq auto-save-visited-mode t)
+(setq auto-save-visited-interval 2)
+(auto-save-visited-mode 1)
 
 (setq inhibit-startup-message t)
 (cd (getenv "HOME"))
@@ -597,8 +601,6 @@
 (when (boundp 'emacs.startup)
   (global-set-key [f7] '(lambda () (interactive) (find-file emacs.startup)))
   )
-
-
 
 
 ;;;
