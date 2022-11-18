@@ -55,9 +55,13 @@
 (setq max-lisp-eval-depth 5000)
 
 (setq auto-save-default nil)
-(setq auto-save-visited-mode t)
-(setq auto-save-visited-interval 2)
-(auto-save-visited-mode 1)
+
+;;;
+;;; これらを設定すると日本語変換中に自動で変換が確定してしまう
+;;;
+;(setq auto-save-visited-mode t)
+;(setq auto-save-visited-interval 8)
+;(auto-save-visited-mode 1)
 
 (setq inhibit-startup-message t)
 (cd (getenv "HOME"))
@@ -564,6 +568,8 @@
   )
 
 ;;;
+;;; all-the-icons
+;;;
 ;;; Icons for Neo Tree
 ;;;
 ;;; [NOTE] exec M-x all-the-icons-install-fonts
@@ -590,6 +596,15 @@
   (setq imenu-list-position 'left)
   )
 
+;;;
+;;; valign
+;;;
+;;; 日本語入りテーブルのずれを防ぐ
+;;;
+(when (require 'valign nil t)
+  (add-hook 'org-mode-hook 'valign-mode)
+  (add-hook 'markdown-mode-hook 'valign-mode)
+  )
  
 ;;;
 ;;; My Convenient
