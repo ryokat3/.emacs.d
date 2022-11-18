@@ -145,7 +145,7 @@
   )
 
 ;; Windows tr-ime + w32-ime 設定
-(when (and (require 'tr-ime nil t) (require 'w32-ime nil t))
+(when (and window-system windows-p (require 'tr-ime nil t) (require 'w32-ime nil t))
   (tr-ime-advanced-install)
   (setq default-input-method "W32-IME")
   (w32-ime-initialize)
