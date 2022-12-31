@@ -605,7 +605,15 @@
   (add-hook 'org-mode-hook 'valign-mode)
   (add-hook 'markdown-mode-hook 'valign-mode)
   )
- 
+
+;;;
+;;; markdown-preview-mode
+;;;
+(when (require 'markdown-preview-mode nil t)
+  (setq markdown-preview-ws-port 59000)
+  (setq markdown-preview-http-port 59100)
+  )
+
 ;;;
 ;;; My Convenient
 ;;;
